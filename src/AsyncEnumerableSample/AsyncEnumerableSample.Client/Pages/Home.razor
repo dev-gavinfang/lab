@@ -1,0 +1,44 @@
+﻿@page "/"
+@using System.Diagnostics
+@using AsyncEnumerableSample.Client.Contracts
+@using Microsoft.AspNetCore.Components.WebAssembly.Http
+@using System.Text.Json
+@inject HttpClient Http
+@rendermode InteractiveWebAssembly
+
+<PageTitle>Home-client</PageTitle>
+
+<h1>Hello, world!</h1>
+
+<FluentButton @onclick="LoadNumbersAsync">Load</FluentButton>
+
+@foreach(var obj in Data)
+{
+    <p>@obj.Name</p>
+}
+
+@code {
+    List<SampleDto> Data = new ();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+    }
+
+    private async Task LoadNumbersAsync()
+    {
+        const string url = "/api/async-enumerable";
+
+        var request = new HttpRequestMessage(HttpMethod.Get, url);
+        request.SetBrowserResponseStreamingEnabled(true);
+
+        using var response = await Http.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
+
+        using var stream = await response.Content.ReadAsStreamAsync();
+        await foreach (var obj in JsonSerializer.DeserializeAsyncEnumerable<SampleDto>(stream))
+        {
+            Data.Add(obj!);
+            StateHasChanged();
+        };
+    }
+}
