@@ -1,4 +1,6 @@
-﻿@using AsyncEnumerableSample.Client.Components.Layout
+﻿@using AsyncEnumerableSample.Components.Layout
+@using Microsoft.AspNetCore.Components.Routing
+
 <Router AppAssembly="typeof(Program).Assembly" AdditionalAssemblies="new[] { typeof(Client._Imports).Assembly }">
     <Found Context="routeData">
         <RouteView RouteData="routeData" DefaultLayout="typeof(MainLayout)" />
