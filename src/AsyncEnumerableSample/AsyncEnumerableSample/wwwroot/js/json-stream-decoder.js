@@ -54,7 +54,11 @@ window.fetchAsyncEnumerable = async (dotnetHelper) => {
         if (done) break;
         if (!value) continue;
         const chunk = decoder.decodeChunk(value);
-        dotnetHelper.invokeMethodAsync('OnDataReceived', chunk);
+        const isOk = await dotnetHelper.invokeMethodAsync('OnDataReceived', chunk);
+        console.log({isOk})
+        if (!isOk) {
+            break;
+        }
     }
 
     reader.releaseLock();
