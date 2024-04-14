@@ -1,0 +1,128 @@
+﻿@page "/"
+@using System.Diagnostics
+@using AsyncEnumerableSample.Client.Contracts
+@using Microsoft.AspNetCore.Components.WebAssembly.Http
+@using System.Text.Json
+@inject HttpClient Http
+@inject IJSRuntime JSRuntime
+@rendermode InteractiveWebAssembly
+
+<PageTitle>Home-client</PageTitle>
+
+<h1>Hello, world!</h1>
+
+<FluentButton @onclick="LoadNumbersCSharpAsync" Disabled="@_loading">Load(CSharp)</FluentButton>
+<FluentButton @onclick="LoadNumbersJsAsync" Disabled="@_loading">Load(Javascript)</FluentButton>
+
+<FluentButton @onclick="Cancel" Disabled="@(!_loading)">Cancel</FluentButton>
+
+@foreach (var obj in _data)
+{
+    @if(obj is not null)
+    {
+        <p>@obj.Name</p>
+    }
+}
+
+@code {
+    List<SampleDto> _data = new();
+    bool _loading;
+
+    CancellationTokenSource? _cancellationTokenSource;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+    }
+
+    private void Cancel()
+    {
+        _cancellationTokenSource?.Cancel();
+    }
+
+    private async Task LoadNumbersCSharpAsync()
+    {
+        _data.Clear();
+        _cancellationTokenSource = new CancellationTokenSource();
+        var cancellationToken = _cancellationTokenSource.Token;
+
+        const string url = "/api/async-enumerable";
+
+        try
+        {
+            _loading = true;
+            var request = new HttpRequestMessage(HttpMethod.Get, url);
+            request.SetBrowserResponseStreamingEnabled(true);
+
+            using var response = await Http.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
+
+            using var stream = await response.Content.ReadAsStreamAsync();
+            await foreach (var obj in JsonSerializer.DeserializeAsyncEnumerable<SampleDto>(stream, cancellationToken: cancellationToken))
+            {
+                _data.Add(obj!);
+                StateHasChanged();
+            };
+        }
+        catch(OperationCanceledException)
+        {
+            Debug.WriteLine("Operation canceled");
+        }
+        finally
+        {
+            _loading = false;
+        }
+    }
+
+    private async Task LoadNumbersJsAsync()
+    {
+        _data.Clear();
+
+        _cancellationTokenSource = new CancellationTokenSource();
+        var cancellationToken = _cancellationTokenSource.Token;
+
+        try
+        {
+            _loading = true;
+
+            var receiver = new JsStreamDataReceiver(_data, StateHasChanged, cancellationToken);
+            var dotNetObjectRef = DotNetObjectReference.Create(receiver);
+            await JSRuntime.InvokeVoidAsync("window.fetchAsyncEnumerable", cancellationToken, dotNetObjectRef);
+        }
+        catch (OperationCanceledException)
+        {
+            Debug.WriteLine("Operation canceled");
+        }
+        finally
+        {
+            _loading = false;
+        }
+    }
+
+    class JsStreamDataReceiver
+    {
+        private readonly List<SampleDto> _data;
+        private readonly Action _stateHasChanged;
+        private readonly CancellationToken _cancellationToken;
+
+        public JsStreamDataReceiver(List<SampleDto> data, Action stateHasChanged, CancellationToken cancellationToken)
+        {
+            _data = data;
+            _stateHasChanged = stateHasChanged;
+            _cancellationToken = cancellationToken;
+        }
+
+        [JSInvokable]
+        public bool OnDataReceived(SampleDto obj)
+        {
+            if (_cancellationToken.IsCancellationRequested)
+            {
+                return false;
+            }
+
+            _data.Add(obj);
+            _stateHasChanged();
+
+            return true;
+        }
+    }
+}
