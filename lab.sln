@@ -5,9 +5,13 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AsyncEnumerableSample", "AsyncEnumerableSample", "{84410827-B2FD-4DF6-917E-0537DC2181A6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AsyncEnumerableSample", "src\AsyncEnumerableSample\AsyncEnumerableSample\AsyncEnumerableSample.csproj", "{4E3AF5BC-C900-4F7D-9AF7-BADBFB36329C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AsyncEnumerableSample", "src\AsyncEnumerableSample\AsyncEnumerableSample\AsyncEnumerableSample.csproj", "{4E3AF5BC-C900-4F7D-9AF7-BADBFB36329C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AsyncEnumerableSample.Client", "src\AsyncEnumerableSample\AsyncEnumerableSample.Client\AsyncEnumerableSample.Client.csproj", "{E67F95BD-C1BD-405B-A3B4-3F5CD843F025}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AsyncEnumerableSample.Client", "src\AsyncEnumerableSample\AsyncEnumerableSample.Client\AsyncEnumerableSample.Client.csproj", "{E67F95BD-C1BD-405B-A3B4-3F5CD843F025}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RxDotSample", "RxDotSample", "{5B7D0BAE-2E38-4D19-A76C-E9F043DA159F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloRx", "src\RxDotSample\HelloRx\HelloRx.csproj", "{95969D9B-61F9-4DF9-9B8D-BDE4DA45C934}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,6 +27,10 @@ Global
 		{E67F95BD-C1BD-405B-A3B4-3F5CD843F025}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E67F95BD-C1BD-405B-A3B4-3F5CD843F025}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E67F95BD-C1BD-405B-A3B4-3F5CD843F025}.Release|Any CPU.Build.0 = Release|Any CPU
+		{95969D9B-61F9-4DF9-9B8D-BDE4DA45C934}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{95969D9B-61F9-4DF9-9B8D-BDE4DA45C934}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{95969D9B-61F9-4DF9-9B8D-BDE4DA45C934}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{95969D9B-61F9-4DF9-9B8D-BDE4DA45C934}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -30,6 +38,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{4E3AF5BC-C900-4F7D-9AF7-BADBFB36329C} = {84410827-B2FD-4DF6-917E-0537DC2181A6}
 		{E67F95BD-C1BD-405B-A3B4-3F5CD843F025} = {84410827-B2FD-4DF6-917E-0537DC2181A6}
+		{95969D9B-61F9-4DF9-9B8D-BDE4DA45C934} = {5B7D0BAE-2E38-4D19-A76C-E9F043DA159F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C2ED4FD3-39C8-4B61-AB46-6F4D34083946}
