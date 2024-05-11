@@ -1,6 +1,7 @@
 ﻿@page "/counter"
 @rendermode InteractiveWebAssembly
 @inject HttpClient httpClient
+@inject NavigationManager NavigationManager
 
 <PageTitle>Counter</PageTitle>
 
@@ -17,7 +18,12 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var counterRaw = await httpClient.GetStringAsync("/api/counter");
+        if (httpClient.BaseAddress is null)
+        {
+            httpClient.BaseAddress = new Uri(NavigationManager.BaseUri);
+        }
+
+        var counterRaw = await httpClient.GetStringAsync("api/counter");
 
         if (int.TryParse(counterRaw, out var counter))
         {
@@ -27,7 +33,7 @@
 
     private async void IncrementCount()
     {
-        using var response = await httpClient.PostAsync("/api/counter", null);
+        using var response = await httpClient.PostAsync("api/counter", null);
         var counterRaw = await response.Content.ReadAsStringAsync();
 
         if (int.TryParse(counterRaw, out var counter))
