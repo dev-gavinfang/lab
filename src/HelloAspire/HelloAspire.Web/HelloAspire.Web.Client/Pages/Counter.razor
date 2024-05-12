@@ -39,6 +39,11 @@
         if (int.TryParse(counterRaw, out var counter))
         {
             currentCount = counter;
+            StateHasChanged();
+        }
+        else
+        {
+            Console.WriteLine("Failed to parse counter");
         }
     }
 }
