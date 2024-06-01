@@ -3,7 +3,7 @@ using System.Reactive.Linq;
 
 Console.WriteLine("Hello, Rx!");
 
-//HelloObservable();
+HelloObservable();
 HelloObserver();
 
 static void HelloObservable()
