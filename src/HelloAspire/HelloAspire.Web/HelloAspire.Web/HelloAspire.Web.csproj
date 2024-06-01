@@ -8,11 +8,16 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\HelloAspire.ServiceDefaults\HelloAspire.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\..\OrleansContracts\OrleansContracts.csproj" />
     <ProjectReference Include="..\HelloAspire.Web.Client\HelloAspire.Web.Client.csproj" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.*-*" />
   </ItemGroup>
   <ItemGroup>
 	<PackageReference Include="Microsoft.FluentUI.AspNetCore.Components" Version="4.*-* " />
     <PackageReference Include="Microsoft.FluentUI.AspNetCore.Components.Icons" Version="4.*-* " />
+    <PackageReference Include="Microsoft.Orleans.Client" Version="8.2.0-preview1" />
+	<PackageReference Include="Aspire.StackExchange.Redis" Version="8.0.1" />
+	<PackageReference Include="Microsoft.Orleans.Clustering.Redis" Version="8.2.0-preview1" />
+	<PackageReference Include="Microsoft.Orleans.Sdk" Version="8.2.0-preview1" />
   </ItemGroup>
 </Project>

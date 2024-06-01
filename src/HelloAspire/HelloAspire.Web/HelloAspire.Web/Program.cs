@@ -1,9 +1,15 @@
 using HelloAspire.Web.Components;
+using Microsoft.Extensions.Hosting;
 using Microsoft.FluentUI.AspNetCore.Components;
+using Orleans.Runtime;
+using OrleansContracts;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
+builder.AddKeyedRedisClient("gavin-redis");
+
+builder.UseOrleansClient();
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
@@ -11,8 +17,6 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddFluentUIComponents();
 builder.Services.AddHttpClient();
-
-builder.Services.AddSingleton<CounterService>();
 
 var app = builder.Build();
 
@@ -39,11 +43,17 @@ app.MapRazorComponents<App>()
     .AddInteractiveWebAssemblyRenderMode()
     .AddAdditionalAssemblies(typeof(HelloAspire.Web.Client._Imports).Assembly);
 
-app.MapGet("/api/counter", (CounterService service) => service.Counter);
-app.MapPost("/api/counter", (CounterService service) =>
+app.MapGet("/api/counter", async (IClusterClient client) =>
 {
-    service.Increment();
-    return service.Counter;
+    var grain = client.GetGrain<ICounterGrain>("dev");
+    return await grain.Get();
+});
+app.MapPost("/api/counter", async (IClusterClient client) =>
+{
+    var grain = client.GetGrain<ICounterGrain>("dev");
+    await grain.Increment();
+
+    return await grain.Get();
 });
 
 app.Run();
